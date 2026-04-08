@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -6,14 +8,15 @@ from app.auth import get_current_user
 from app.database import get_db
 from app.models import Playlist, PlaylistTrack, Track, User
 from app.schemas import PlaylistCreate, PlaylistOut, PlaylistTrackAdd, PlaylistUpdate
-from app.services import get_playlist_or_404
+from app.services import ensure_starter_playlists, get_playlist_or_404
 
 
 router = APIRouter(prefix="/playlists", tags=["playlists"])
 
 
-@router.get("", response_model=list[PlaylistOut])
+@router.get("", response_model=List[PlaylistOut])
 def list_playlists(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    ensure_starter_playlists(db, current_user)
     playlists = db.scalars(select(Playlist).where(Playlist.owner_id == current_user.id)).all()
     return [PlaylistOut.model_validate(get_playlist_or_404(db, playlist.id)) for playlist in playlists]
 

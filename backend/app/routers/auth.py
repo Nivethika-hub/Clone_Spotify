@@ -6,7 +6,7 @@ from app.auth import create_access_token, get_current_user, hash_password, verif
 from app.database import get_db
 from app.models import User
 from app.schemas import Token, UserCreate, UserLogin, UserProfile, UserProfileUpdate
-from app.services import ensure_playback_state, user_profile
+from app.services import ensure_playback_state, ensure_starter_library, ensure_starter_playlists, user_profile
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -27,6 +27,8 @@ def signup(payload: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
     ensure_playback_state(db, user)
+    ensure_starter_library(db, user)
+    ensure_starter_playlists(db, user)
     return Token(access_token=create_access_token(str(user.id)))
 
 
@@ -36,6 +38,8 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
     if user is None or not verify_password(payload.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     ensure_playback_state(db, user)
+    ensure_starter_library(db, user)
+    ensure_starter_playlists(db, user)
     return Token(access_token=create_access_token(str(user.id)))
 
 

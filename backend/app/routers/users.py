@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import and_, select
 from sqlalchemy.orm import Session
@@ -5,11 +7,25 @@ from sqlalchemy.orm import Session
 from app.auth import get_current_user
 from app.database import get_db
 from app.models import Follow, User
-from app.schemas import FollowResponse, UserProfile
+from app.schemas import FollowResponse, UserCard, UserProfile
 from app.services import user_profile
 
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+
+@router.get("", response_model=List[UserCard])
+def list_users(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    users = db.scalars(select(User).order_by(User.created_at.desc()).limit(20)).all()
+    following_ids = set(
+        db.scalars(select(Follow.following_id).where(Follow.follower_id == current_user.id)).all()
+    )
+    cards: List[UserCard] = []
+    for user in users:
+        if user.id == current_user.id:
+            continue
+        cards.append(UserCard(**user_profile(db, user).model_dump(), is_following=user.id in following_ids))
+    return cards
 
 
 @router.get("/{user_id}", response_model=UserProfile)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import List, Optional
 
 from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -24,10 +25,10 @@ class User(Base, TimestampMixin):
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(255))
     name: Mapped[str] = mapped_column(String(120))
-    avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    bio: Mapped[str | None] = mapped_column(Text, nullable=True)
+    avatar_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    bio: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
-    playlists: Mapped[list["Playlist"]] = relationship(back_populates="owner", cascade="all, delete-orphan")
+    playlists: Mapped[List["Playlist"]] = relationship(back_populates="owner", cascade="all, delete-orphan")
     playback_state: Mapped["PlaybackState"] = relationship(
         back_populates="user",
         cascade="all, delete-orphan",
@@ -50,12 +51,12 @@ class Artist(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(120), unique=True, index=True)
-    bio: Mapped[str | None] = mapped_column(Text, nullable=True)
-    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    genre: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
+    bio: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    image_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    genre: Mapped[Optional[str]] = mapped_column(String(120), nullable=True, index=True)
 
-    albums: Mapped[list["Album"]] = relationship(back_populates="artist", cascade="all, delete-orphan")
-    tracks: Mapped[list["Track"]] = relationship(back_populates="artist")
+    albums: Mapped[List["Album"]] = relationship(back_populates="artist", cascade="all, delete-orphan")
+    tracks: Mapped[List["Track"]] = relationship(back_populates="artist")
 
 
 class Album(Base, TimestampMixin):
@@ -63,13 +64,13 @@ class Album(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(120), index=True)
-    cover_image: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    cover_image: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     artist_id: Mapped[int] = mapped_column(ForeignKey("artists.id", ondelete="CASCADE"))
-    genre: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
-    release_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    genre: Mapped[Optional[str]] = mapped_column(String(120), nullable=True, index=True)
+    release_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     artist: Mapped["Artist"] = relationship(back_populates="albums")
-    tracks: Mapped[list["Track"]] = relationship(back_populates="album", cascade="all, delete-orphan")
+    tracks: Mapped[List["Track"]] = relationship(back_populates="album", cascade="all, delete-orphan")
 
 
 class Track(Base, TimestampMixin):
@@ -80,9 +81,9 @@ class Track(Base, TimestampMixin):
     duration_seconds: Mapped[int] = mapped_column(Integer, default=0)
     artist_id: Mapped[int] = mapped_column(ForeignKey("artists.id", ondelete="CASCADE"))
     album_id: Mapped[int] = mapped_column(ForeignKey("albums.id", ondelete="CASCADE"))
-    genre: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
-    audio_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    audio_path: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    genre: Mapped[Optional[str]] = mapped_column(String(120), nullable=True, index=True)
+    audio_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    audio_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     artist: Mapped["Artist"] = relationship(back_populates="tracks")
     album: Mapped["Album"] = relationship(back_populates="tracks")
@@ -133,12 +134,12 @@ class Playlist(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     owner_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     title: Mapped[str] = mapped_column(String(120), index=True)
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     is_public: Mapped[bool] = mapped_column(Boolean, default=True)
-    cover_image: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    cover_image: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     owner: Mapped["User"] = relationship(back_populates="playlists")
-    tracks: Mapped[list["PlaylistTrack"]] = relationship(
+    tracks: Mapped[List["PlaylistTrack"]] = relationship(
         back_populates="playlist",
         cascade="all, delete-orphan",
         order_by="PlaylistTrack.position",
@@ -164,13 +165,13 @@ class PlaybackState(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True)
-    current_track_id: Mapped[int | None] = mapped_column(ForeignKey("tracks.id"), nullable=True)
+    current_track_id: Mapped[Optional[int]] = mapped_column(ForeignKey("tracks.id"), nullable=True)
     is_playing: Mapped[bool] = mapped_column(Boolean, default=False)
     position_seconds: Mapped[float] = mapped_column(Float, default=0)
     volume: Mapped[float] = mapped_column(Float, default=0.8)
     shuffle_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
     repeat_mode: Mapped[str] = mapped_column(String(20), default="off")
-    queue_track_ids: Mapped[str | None] = mapped_column(Text, nullable=True)
+    queue_track_ids: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="playback_state")
-    current_track: Mapped["Track | None"] = relationship()
+    current_track: Mapped[Optional["Track"]] = relationship()
