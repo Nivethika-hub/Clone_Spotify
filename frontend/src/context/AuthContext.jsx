@@ -94,10 +94,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => authenticate('/auth/login', { email, password });
+  const login = async (email, password) =>
+    authenticate('/auth/login', { email: email.trim().toLowerCase(), password });
 
   const signup = async (email, password, name) =>
-    authenticate('/auth/signup', { email, password, name });
+    authenticate('/auth/signup', {
+      email: email.trim().toLowerCase(),
+      password,
+      name: name.trim(),
+    });
 
   const logout = () => {
     delete apiClient.defaults.headers.common.Authorization;
