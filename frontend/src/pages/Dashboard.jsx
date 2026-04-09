@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Clock3, Flame, ListMusic, Search, Sparkles, UserRound } from 'lucide-react';
+import { Clock3, Disc, Flame, ListMusic, Search, Sparkles, UserCircle, UserRound } from 'lucide-react';
 
 import SectionShelf from '../components/SectionShelf';
 import TrackRow from '../components/TrackRow';
@@ -31,16 +31,16 @@ const Dashboard = () => {
         // SAFE FALLBACK: If backend sent no tracks, use our predefined 10 songs
         if (!homeData.featured_tracks || homeData.featured_tracks.length === 0) {
           const fallbackTracks = [
-            { id: 101, title: 'Oo Antava', artist: { name: 'Devi Sri Prasad' }, album: { title: 'Pushpa', cover_image: 'https://i.ytimg.com/vi/u_wB6byrl5k/maxresdefault.jpg' } },
-            { id: 102, title: 'Naatu Naatu', artist: { name: 'M.M. Keeravani' }, album: { title: 'RRR', cover_image: 'https://i.ytimg.com/vi/79IEesucPo8/maxresdefault.jpg' } },
-            { id: 103, title: 'Megham Karukatha', artist: { name: 'Dhanush' }, album: { title: 'Thiruchitrambalam', cover_image: 'https://i.ytimg.com/vi/cEWwJxEq9Lg/maxresdefault.jpg' } },
-            { id: 104, title: 'Vaseegara', artist: { name: 'Bombay Jayashri' }, album: { title: 'Minnale', cover_image: 'https://i.ytimg.com/vi/ew1fKCWb_M4/maxresdefault.jpg' } },
-            { id: 105, title: 'Munbe Vaa', artist: { name: 'A.R. Rahman' }, album: { title: 'Sillunu Oru Kadhal', cover_image: 'https://i.ytimg.com/vi/rp3_FhRnIRw/maxresdefault.jpg' } },
-            { id: 106, title: 'Arabic Kuthu', artist: { name: 'Anirudh Ravichander' }, album: { title: 'Beast', cover_image: 'https://i.ytimg.com/vi/KUN5Uf9mObQ/maxresdefault.jpg' } },
-            { id: 107, title: 'Enjoy Enjaami', artist: { name: 'Dhee' }, album: { title: 'Single', cover_image: 'https://i.ytimg.com/vi/eYq7WapuDLU/maxresdefault.jpg' } },
-            { id: 108, title: 'Why This Kolaveri Di', artist: { name: 'Dhanush' }, album: { title: '3', cover_image: 'https://i.ytimg.com/vi/YR12Z8f1Dh8/maxresdefault.jpg' } },
-            { id: 109, title: 'Rowdy Baby', artist: { name: 'Dhanush' }, album: { title: 'Maari 2', cover_image: 'https://i.ytimg.com/vi/x6Q7c9RyMzk/maxresdefault.jpg' } },
-            { id: 110, title: 'Vaathi Coming', artist: { name: 'Anirudh Ravichander' }, album: { title: 'Master', cover_image: 'https://i.ytimg.com/vi/fRD_3vJagxk/maxresdefault.jpg' } },
+            { id: 1, title: 'Oo Antava', artist: { id: 1, name: 'Devi Sri Prasad' }, album: { id: 1, title: 'Pushpa', cover_image: 'https://i.ytimg.com/vi/u_wB6byrl5k/maxresdefault.jpg' } },
+            { id: 2, title: 'Naatu Naatu', artist: { id: 2, name: 'M.M. Keeravani' }, album: { id: 2, title: 'RRR', cover_image: 'https://i.ytimg.com/vi/79IEesucPo8/maxresdefault.jpg' } },
+            { id: 3, title: 'Megham Karukatha', artist: { id: 3, name: 'Dhanush' }, album: { id: 3, title: 'Thiruchitrambalam', cover_image: 'https://i.ytimg.com/vi/cEWwJxEq9Lg/maxresdefault.jpg' } },
+            { id: 4, title: 'Vaseegara', artist: { id: 4, name: 'Bombay Jayashri' }, album: { id: 4, title: 'Minnale', cover_image: 'https://i.ytimg.com/vi/ew1fKCWb_M4/maxresdefault.jpg' } },
+            { id: 5, title: 'Munbe Vaa', artist: { id: 5, name: 'A.R. Rahman' }, album: { id: 5, title: 'Sillunu Oru Kadhal', cover_image: 'https://i.ytimg.com/vi/rp3_FhRnIRw/maxresdefault.jpg' } },
+            { id: 6, title: 'Arabic Kuthu', artist: { id: 6, name: 'Anirudh Ravichander' }, album: { id: 6, title: 'Beast', cover_image: 'https://i.ytimg.com/vi/KUN5Uf9mObQ/maxresdefault.jpg' } },
+            { id: 7, title: 'Enjoy Enjaami', artist: { id: 7, name: 'Dhee' }, album: { id: 7, title: 'Single', cover_image: 'https://i.ytimg.com/vi/eYq7WapuDLU/maxresdefault.jpg' } },
+            { id: 8, title: 'Why This Kolaveri Di', artist: { id: 8, name: 'Dhanush' }, album: { id: 8, title: '3', cover_image: 'https://i.ytimg.com/vi/YR12Z8f1Dh8/maxresdefault.jpg' } },
+            { id: 9, title: 'Rowdy Baby', artist: { id: 9, name: 'Dhanush' }, album: { id: 9, title: 'Maari 2', cover_image: 'https://i.ytimg.com/vi/x6Q7c9RyMzk/maxresdefault.jpg' } },
+            { id: 10, title: 'Vaathi Coming', artist: { id: 10, name: 'Anirudh Ravichander' }, album: { id: 10, title: 'Master', cover_image: 'https://i.ytimg.com/vi/fRD_3vJagxk/maxresdefault.jpg' } },
           ];
           homeData.featured_tracks = fallbackTracks;
           homeData.made_for_you = fallbackTracks.slice(0, 5);
@@ -93,21 +93,45 @@ const Dashboard = () => {
             }}
           >
             <img src={withFallbackArt(track.album?.cover_image)} alt={track.title} onError={handleImageFallback} />
-            <div>
+            <div className="quick-info">
               <strong>{track.title}</strong>
               <span>{track.artist?.name}</span>
             </div>
-            <button
-              type="button"
-              className={`quick-like-button ${library?.liked_tracks?.some((item) => item.id === track.id) ? 'active' : ''}`}
-              onClick={(event) => {
-                event.stopPropagation();
-                toggleLike(track);
-              }}
-              aria-label="Toggle like"
-            >
-              <Heart size={16} fill={library?.liked_tracks?.some((item) => item.id === track.id) ? 'currentColor' : 'none'} />
-            </button>
+            <div className="quick-actions">
+              <button
+                type="button"
+                className={`quick-action-btn ${library?.liked_tracks?.some((item) => item.id === track.id) ? 'active' : ''}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleLike(track);
+                }}
+                title="Like song"
+              >
+                <Heart size={14} fill={library?.liked_tracks?.some((item) => item.id === track.id) ? 'currentColor' : 'none'} />
+              </button>
+              <button
+                type="button"
+                className={`quick-action-btn ${library?.saved_albums?.some((item) => item.id === track.album?.id) ? 'active-album' : ''}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleAlbumSave(track.album);
+                }}
+                title="Save album"
+              >
+                <Disc size={14} fill={library?.saved_albums?.some((item) => item.id === track.album?.id) ? 'currentColor' : 'none'} />
+              </button>
+              <button
+                type="button"
+                className={`quick-action-btn ${library?.saved_artists?.some((item) => item.id === track.artist?.id) ? 'active-artist' : ''}`}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleArtistSave(track.artist);
+                }}
+                title="Follow artist"
+              >
+                <UserCircle size={14} fill={library?.saved_artists?.some((item) => item.id === track.artist?.id) ? 'currentColor' : 'none'} />
+              </button>
+            </div>
           </div>
         ))}
       </section>

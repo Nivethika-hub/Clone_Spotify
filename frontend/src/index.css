@@ -657,27 +657,56 @@ textarea {
 
 .quick-card span {
   display: block;
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
-.quick-like-button {
-  position: absolute;
-  right: 0.7rem;
-  bottom: 0.7rem;
-  width: 34px;
-  height: 34px;
+.quick-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin-left: auto;
+  padding-right: 0.8rem;
+}
+
+.quick-action-btn {
+  width: 28px;
+  height: 28px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(18, 18, 18, 0.85);
-  color: var(--text);
+  background: rgba(18, 18, 18, 0.6);
+  color: var(--muted);
   display: grid;
   place-items: center;
+  transition: all 180ms ease;
 }
 
-.quick-like-button.active {
+.quick-action-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  transform: scale(1.1);
+}
+
+.quick-action-btn.active {
   color: var(--accent);
+}
+
+.quick-action-btn.active-album {
+  color: #3d91ff;
+}
+
+.quick-action-btn.active-artist {
+  color: #b388ff;
+}
+
+.quick-action-btn svg {
+  fill: none;
+}
+
+.quick-action-btn.active svg,
+.quick-action-btn.active-album svg,
+.quick-action-btn.active-artist svg {
+  fill: currentColor;
 }
 
 .quick-like-button.active svg,
