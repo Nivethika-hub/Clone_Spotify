@@ -288,11 +288,13 @@ def seed_catalog(db: Session) -> None:
             if track is None:
                 track = Track(**track_data, artist=artist, album=album)
                 db.add(track)
+                print(f"DEBUG: Created track: {track_data['title']}")
             else:
                 for field, value in track_data.items():
                     setattr(track, field, value)
                 track.artist = artist
                 track.album = album
+                print(f"DEBUG: Updated track: {track_data['title']}")
 
-    db.commit()
+        db.commit()
 
