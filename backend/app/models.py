@@ -52,7 +52,7 @@ class Artist(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     bio: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    image_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    image_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     genre: Mapped[Optional[str]] = mapped_column(String(120), nullable=True, index=True)
 
     albums: Mapped[List["Album"]] = relationship(back_populates="artist", cascade="all, delete-orphan")
@@ -64,7 +64,7 @@ class Album(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(120), index=True)
-    cover_image: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    cover_image: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     artist_id: Mapped[int] = mapped_column(ForeignKey("artists.id", ondelete="CASCADE"))
     genre: Mapped[Optional[str]] = mapped_column(String(120), nullable=True, index=True)
     release_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
@@ -82,7 +82,7 @@ class Track(Base, TimestampMixin):
     artist_id: Mapped[int] = mapped_column(ForeignKey("artists.id", ondelete="CASCADE"))
     album_id: Mapped[int] = mapped_column(ForeignKey("albums.id", ondelete="CASCADE"))
     genre: Mapped[Optional[str]] = mapped_column(String(120), nullable=True, index=True)
-    audio_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    audio_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     audio_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
 
     artist: Mapped["Artist"] = relationship(back_populates="tracks")
