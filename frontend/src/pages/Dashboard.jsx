@@ -27,7 +27,28 @@ const Dashboard = () => {
           api.get('/library'),
           api.get('/playlists'),
         ]);
-        setHome(homeResponse.data);
+
+        let homeData = homeResponse.data;
+        
+        // SAFE FALLBACK: If backend sent no tracks, use our predefined 10 songs
+        if (!homeData.featured_tracks || homeData.featured_tracks.length === 0) {
+          const fallbackTracks = [
+            { id: 101, title: 'Oo Antava', artist: { name: 'Devi Sri Prasad' }, album: { title: 'Pushpa', cover_image: 'https://i.ytimg.com/vi/u_wB6byrl5k/maxresdefault.jpg' } },
+            { id: 102, title: 'Naatu Naatu', artist: { name: 'M.M. Keeravani' }, album: { title: 'RRR', cover_image: 'https://i.ytimg.com/vi/79IEesucPo8/maxresdefault.jpg' } },
+            { id: 103, title: 'Megham Karukatha', artist: { name: 'Dhanush' }, album: { title: 'Thiruchitrambalam', cover_image: 'https://i.ytimg.com/vi/cEWwJxEq9Lg/maxresdefault.jpg' } },
+            { id: 104, title: 'Vaseegara', artist: { name: 'Bombay Jayashri' }, album: { title: 'Minnale', cover_image: 'https://i.ytimg.com/vi/ew1fKCWb_M4/maxresdefault.jpg' } },
+            { id: 105, title: 'Munbe Vaa', artist: { name: 'A.R. Rahman' }, album: { title: 'Sillunu Oru Kadhal', cover_image: 'https://i.ytimg.com/vi/rp3_FhRnIRw/maxresdefault.jpg' } },
+            { id: 106, title: 'Arabic Kuthu', artist: { name: 'Anirudh Ravichander' }, album: { title: 'Beast', cover_image: 'https://i.ytimg.com/vi/KUN5Uf9mObQ/maxresdefault.jpg' } },
+            { id: 107, title: 'Enjoy Enjaami', artist: { name: 'Dhee' }, album: { title: 'Single', cover_image: 'https://i.ytimg.com/vi/eYq7WapuDLU/maxresdefault.jpg' } },
+            { id: 108, title: 'Why This Kolaveri Di', artist: { name: 'Dhanush' }, album: { title: '3', cover_image: 'https://i.ytimg.com/vi/YR12Z8f1Dh8/maxresdefault.jpg' } },
+            { id: 109, title: 'Rowdy Baby', artist: { name: 'Dhanush' }, album: { title: 'Maari 2', cover_image: 'https://i.ytimg.com/vi/x6Q7c9RyMzk/maxresdefault.jpg' } },
+            { id: 110, title: 'Vaathi Coming', artist: { name: 'Anirudh Ravichander' }, album: { title: 'Master', cover_image: 'https://i.ytimg.com/vi/fRD_3vJagxk/maxresdefault.jpg' } },
+          ];
+          homeData.featured_tracks = fallbackTracks;
+          homeData.made_for_you = fallbackTracks.slice(0, 5);
+        }
+
+        setHome(homeData);
         setLibrary(libraryResponse.data);
         setPlaylists(playlistResponse.data);
       } catch (error) {
