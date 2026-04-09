@@ -59,7 +59,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Rowdy Baby",
                     "duration_seconds": 219,
                     "genre": "Tamil Film",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                    "audio_url": "https://www.youtube.com/embed/x6Q7c9RyMzk",
                 }
             ],
         },
@@ -81,7 +81,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Vaathi Coming",
                     "duration_seconds": 229,
                     "genre": "Tamil Film",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                    "audio_url": "https://www.youtube.com/embed/fRD_3vJagxk",
                 }
             ],
         },
@@ -103,7 +103,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Why This Kolaveri Di",
                     "duration_seconds": 251,
                     "genre": "Tamil Film",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                    "audio_url": "https://www.youtube.com/embed/YR12Z8f1Dh8",
                 }
             ],
         },
@@ -125,7 +125,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Enjoy Enjaami",
                     "duration_seconds": 279,
                     "genre": "Tamil Alternative",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+                    "audio_url": "https://www.youtube.com/embed/eYq7WapuDLU",
                 }
             ],
         },
@@ -147,7 +147,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Arabic Kuthu",
                     "duration_seconds": 261,
                     "genre": "Tamil Film",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+                    "audio_url": "https://www.youtube.com/embed/KUN5Uf9mObQ",
                 }
             ],
         },
@@ -169,7 +169,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Munbe Vaa",
                     "duration_seconds": 357,
                     "genre": "Tamil Melody",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+                    "audio_url": "https://www.youtube.com/embed/rp3_FhRnIRw",
                 }
             ],
         },
@@ -191,7 +191,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Vaseegara",
                     "duration_seconds": 299,
                     "genre": "Tamil Melody",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+                    "audio_url": "https://www.youtube.com/embed/ew1fKCWb_M4",
                 }
             ],
         },
@@ -213,7 +213,7 @@ def seed_catalog(db: Session) -> None:
                     "title": "Megham Karukatha",
                     "duration_seconds": 274,
                     "genre": "Tamil Film",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+                    "audio_url": "https://www.youtube.com/embed/cEWwJxEq9Lg",
                 }
             ],
         },
@@ -232,10 +232,10 @@ def seed_catalog(db: Session) -> None:
             },
             "tracks": [
                 {
-                    "title": "Naatu Naatu (Tamil Version)",
+                    "title": "Naatu Naatu",
                     "duration_seconds": 214,
                     "genre": "Tamil Film",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+                    "audio_url": "https://www.youtube.com/embed/79IEesucPo8",
                 }
             ],
         },
@@ -254,10 +254,10 @@ def seed_catalog(db: Session) -> None:
             },
             "tracks": [
                 {
-                    "title": "Oo Antava (Tamil Version)",
+                    "title": "Oo Antava",
                     "duration_seconds": 223,
                     "genre": "Tamil Film",
-                    "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
+                    "audio_url": "https://www.youtube.com/embed/u_wB6byrl5k",
                 }
             ],
         },

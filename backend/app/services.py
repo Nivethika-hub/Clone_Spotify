@@ -44,8 +44,8 @@ VISIBLE_TAMIL_TRACK_TITLES = [
     "Munbe Vaa",
     "Vaseegara",
     "Megham Karukatha",
-    "Naatu Naatu (Tamil Version)",
-    "Oo Antava (Tamil Version)",
+    "Naatu Naatu",
+    "Oo Antava",
 ]
 
 
