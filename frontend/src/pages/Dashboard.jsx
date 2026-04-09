@@ -84,6 +84,36 @@ const Dashboard = () => {
     }
   };
 
+  const toggleAlbumSave = async (album) => {
+    const isSaved = Boolean(library?.saved_albums?.some((item) => item.id === album.id));
+    try {
+      if (isSaved) {
+        await api.delete(`/library/albums/${album.id}/save`);
+      } else {
+        await api.post(`/library/albums/${album.id}/save`);
+      }
+      const libraryResponse = await api.get('/library');
+      setLibrary(libraryResponse.data);
+    } catch (error) {
+      console.error('Failed to update saved album:', error);
+    }
+  };
+
+  const toggleArtistSave = async (artist) => {
+    const isSaved = Boolean(library?.saved_artists?.some((item) => item.id === artist.id));
+    try {
+      if (isSaved) {
+        await api.delete(`/library/artists/${artist.id}/save`);
+      } else {
+        await api.post(`/library/artists/${artist.id}/save`);
+      }
+      const libraryResponse = await api.get('/library');
+      setLibrary(libraryResponse.data);
+    } catch (error) {
+      console.error('Failed to update saved artist:', error);
+    }
+  };
+
   const quickAccess = uniqueTracks([...home.featured_tracks, ...home.made_for_you]).slice(0, 8);
 
   return (
@@ -267,6 +297,17 @@ const Dashboard = () => {
                     <strong>{album.title}</strong>
                     <span>{album.artist?.name}</span>
                   </div>
+                  <button
+                    type="button"
+                    className={`quick-like-button ${library?.saved_albums?.some((item) => item.id === album.id) ? 'active' : ''}`}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleAlbumSave(album);
+                    }}
+                    style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: library?.saved_albums?.some((item) => item.id === album.id) ? 'var(--primary-accent)' : 'var(--text-subdued)' }}
+                  >
+                    <Heart size={16} fill={library?.saved_albums?.some((item) => item.id === album.id) ? 'currentColor' : 'none'} />
+                  </button>
                 </div>
               ))
             ) : (
@@ -290,6 +331,17 @@ const Dashboard = () => {
                   <strong>{artist.name}</strong>
                   <span>{artist.genre}</span>
                 </div>
+                <button
+                  type="button"
+                  className={`quick-like-button ${library?.saved_artists?.some((item) => item.id === artist.id) ? 'active' : ''}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleArtistSave(artist);
+                  }}
+                  style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: library?.saved_artists?.some((item) => item.id === artist.id) ? 'var(--primary-accent)' : 'var(--text-subdued)' }}
+                >
+                  <Heart size={16} fill={library?.saved_artists?.some((item) => item.id === artist.id) ? 'currentColor' : 'none'} />
+                </button>
               </div>
             ))}
           </div>
