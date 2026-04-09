@@ -6,12 +6,16 @@ import { useAuth } from '../context/AuthContext';
 import { initialsForName } from '../lib/formatters';
 
 const Sidebar = () => {
-  const { logout, user } = useAuth();
+  const { logout, user, library } = useAuth();
 
   const menuItems = [
     { label: 'Dashboard', icon: <Home />, path: '/dashboard' },
     { label: 'Search', icon: <Search />, path: '/search' },
-    { label: 'Your Library', icon: <Library />, path: '/library' },
+    { 
+      label: `Your Library ${library?.liked_tracks?.length ? `(${library.liked_tracks.length})` : ''}`, 
+      icon: <Library />, 
+      path: '/library' 
+    },
     { label: 'Playlists', icon: <ListMusic />, path: '/playlists' },
     { label: 'Profile', icon: <UserRound />, path: '/profile' },
   ];

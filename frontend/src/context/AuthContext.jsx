@@ -13,6 +13,17 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY));
 
   const [authInFlight, setAuthInFlight] = useState(false);
+  const [library, setLibrary] = useState(null);
+
+  const refreshLibrary = async () => {
+    if (!token) return;
+    try {
+      const response = await apiClient.get('/library');
+      setLibrary(response.data);
+    } catch (error) {
+      console.error('Failed to fetch library:', error);
+    }
+  };
 
   const refreshUser = async () => {
     if (!token || authInFlight) return;
@@ -28,6 +39,51 @@ export const AuthProvider = ({ children }) => {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const toggleLike = async (track) => {
+    if (!token) return;
+    const isLiked = Boolean(library?.liked_tracks?.some((item) => item.id === track.id));
+    try {
+      if (isLiked) {
+        await apiClient.delete(`/library/tracks/${track.id}/like`);
+      } else {
+        await apiClient.post(`/library/tracks/${track.id}/like`);
+      }
+      await refreshLibrary();
+    } catch (error) {
+      console.error('Failed to update liked track:', error);
+    }
+  };
+
+  const toggleAlbumSave = async (album) => {
+    if (!token) return;
+    const isSaved = Boolean(library?.saved_albums?.some((item) => item.id === album.id));
+    try {
+      if (isSaved) {
+        await apiClient.delete(`/library/albums/${album.id}/save`);
+      } else {
+        await apiClient.post(`/library/albums/${album.id}/save`);
+      }
+      await refreshLibrary();
+    } catch (error) {
+      console.error('Failed to update saved album:', error);
+    }
+  };
+
+  const toggleArtistSave = async (artist) => {
+    if (!token) return;
+    const isSaved = Boolean(library?.saved_artists?.some((item) => item.id === artist.id));
+    try {
+      if (isSaved) {
+        await apiClient.delete(`/library/artists/${artist.id}/save`);
+      } else {
+        await apiClient.post(`/library/artists/${artist.id}/save`);
+      }
+      await refreshLibrary();
+    } catch (error) {
+      console.error('Failed to update saved artist:', error);
     }
   };
 
@@ -52,6 +108,7 @@ export const AuthProvider = ({ children }) => {
 
     if (!user && !authInFlight) {
       refreshUser();
+      refreshLibrary();
     } else {
       setLoading(false);
     }
@@ -117,10 +174,15 @@ export const AuthProvider = ({ children }) => {
         user,
         token,
         loading,
+        library,
         login,
         signup,
         logout,
         refreshUser,
+        refreshLibrary,
+        toggleLike,
+        toggleAlbumSave,
+        toggleArtistSave,
         api: apiClient,
         isAuthenticated: Boolean(user && token),
       }}

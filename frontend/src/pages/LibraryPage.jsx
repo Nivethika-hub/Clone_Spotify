@@ -7,65 +7,10 @@ import { usePlayer } from '../context/PlayerContext';
 import { handleImageFallback, withFallbackArt } from '../lib/media';
 
 const LibraryPage = () => {
-  const { api } = useAuth();
+  const { api, library, toggleLike, toggleAlbumSave, toggleArtistSave } = useAuth();
   const { currentTrack, isPlaying, playTrack } = usePlayer();
-  const [library, setLibrary] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const loadLibrary = useCallback(async () => {
-    try {
-      const response = await api.get('/library');
-      setLibrary(response.data);
-    } catch (error) {
-      console.error('Failed to load library:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [api]);
-
-  useEffect(() => {
-    loadLibrary();
-  }, [loadLibrary]);
-
-  const toggleLike = async (track) => {
-    const isLiked = library?.liked_tracks?.some((item) => item.id === track.id);
-    try {
-      if (isLiked) {
-        await api.delete(`/library/tracks/${track.id}/like`);
-      } else {
-        await api.post(`/library/tracks/${track.id}/like`);
-      }
-      await loadLibrary();
-    } catch (error) {
-      console.error('Failed to update liked track:', error);
-    }
-  };
-
-  const saveAlbum = async (albumId, isSaved) => {
-    try {
-      if (isSaved) {
-        await api.delete(`/library/albums/${albumId}/save`);
-      } else {
-        await api.post(`/library/albums/${albumId}/save`);
-      }
-      await loadLibrary();
-    } catch (error) {
-      console.error('Failed to update album save state:', error);
-    }
-  };
-
-  const saveArtist = async (artistId, isSaved) => {
-    try {
-      if (isSaved) {
-        await api.delete(`/library/artists/${artistId}/save`);
-      } else {
-        await api.post(`/library/artists/${artistId}/save`);
-      }
-      await loadLibrary();
-    } catch (error) {
-      console.error('Failed to update artist save state:', error);
-    }
-  };
 
   if (loading) {
     return <div className="page page-loading">Loading library...</div>;
@@ -124,8 +69,12 @@ const LibraryPage = () => {
                     <strong>{album.title}</strong>
                     <span>{album.artist?.name}</span>
                   </div>
-                  <button className="chip action-chip" onClick={() => saveAlbum(album.id, true)}>
-                    Remove
+                  <button
+                    className={`icon-button active`}
+                    onClick={() => toggleAlbumSave(album)}
+                    title="Remove from library"
+                  >
+                    <Heart size={16} fill="currentColor" />
                   </button>
                 </div>
               ))
@@ -151,8 +100,12 @@ const LibraryPage = () => {
                     <strong>{artist.name}</strong>
                     <span>{artist.genre}</span>
                   </div>
-                  <button className="chip action-chip" onClick={() => saveArtist(artist.id, true)}>
-                    Remove
+                  <button
+                    className={`icon-button active`}
+                    onClick={() => toggleArtistSave(artist)}
+                    title="Unfollow artist"
+                  >
+                    <Heart size={16} fill="currentColor" />
                   </button>
                 </div>
               ))

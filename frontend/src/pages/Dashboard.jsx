@@ -12,19 +12,17 @@ import { uniqueTracks } from '../lib/youtube';
 import { handleImageFallback, withFallbackArt } from '../lib/media';
 
 const Dashboard = () => {
-  const { api, user } = useAuth();
+  const { api, user, library, toggleLike, toggleAlbumSave, toggleArtistSave } = useAuth();
   const { currentTrack, isPlaying, playCollection, playTrack } = usePlayer();
   const [home, setHome] = useState(null);
-  const [library, setLibrary] = useState(null);
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        const [homeResponse, libraryResponse, playlistResponse] = await Promise.all([
+        const [homeResponse, playlistResponse] = await Promise.all([
           api.get('/browse/home'),
-          api.get('/library'),
           api.get('/playlists'),
         ]);
 
@@ -49,7 +47,6 @@ const Dashboard = () => {
         }
 
         setHome(homeData);
-        setLibrary(libraryResponse.data);
         setPlaylists(playlistResponse.data);
       } catch (error) {
         console.error('Failed to load dashboard:', error);
@@ -68,51 +65,6 @@ const Dashboard = () => {
   if (!home) {
     return <div className="page page-loading">We could not load the dashboard right now.</div>;
   }
-
-  const toggleLike = async (track) => {
-    const isLiked = Boolean(library?.liked_tracks?.some((item) => item.id === track.id));
-    try {
-      if (isLiked) {
-        await api.delete(`/library/tracks/${track.id}/like`);
-      } else {
-        await api.post(`/library/tracks/${track.id}/like`);
-      }
-      const libraryResponse = await api.get('/library');
-      setLibrary(libraryResponse.data);
-    } catch (error) {
-      console.error('Failed to update liked track:', error);
-    }
-  };
-
-  const toggleAlbumSave = async (album) => {
-    const isSaved = Boolean(library?.saved_albums?.some((item) => item.id === album.id));
-    try {
-      if (isSaved) {
-        await api.delete(`/library/albums/${album.id}/save`);
-      } else {
-        await api.post(`/library/albums/${album.id}/save`);
-      }
-      const libraryResponse = await api.get('/library');
-      setLibrary(libraryResponse.data);
-    } catch (error) {
-      console.error('Failed to update saved album:', error);
-    }
-  };
-
-  const toggleArtistSave = async (artist) => {
-    const isSaved = Boolean(library?.saved_artists?.some((item) => item.id === artist.id));
-    try {
-      if (isSaved) {
-        await api.delete(`/library/artists/${artist.id}/save`);
-      } else {
-        await api.post(`/library/artists/${artist.id}/save`);
-      }
-      const libraryResponse = await api.get('/library');
-      setLibrary(libraryResponse.data);
-    } catch (error) {
-      console.error('Failed to update saved artist:', error);
-    }
-  };
 
   const quickAccess = uniqueTracks([...home.featured_tracks, ...home.made_for_you]).slice(0, 8);
 
