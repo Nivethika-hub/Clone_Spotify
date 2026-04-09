@@ -1,26 +1,29 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import os
 import sys
 
-# DIAGNOSTIC PRINTS
-print(f"DEBUG: Current Working Directory: {os.getcwd()}")
-print(f"DEBUG: Python Path: {sys.path}")
-print(f"DEBUG: Files in CWD: {os.listdir('.')}")
+# START ABSOLUTE TOP DIAGNOSTICS
+print("--- STARTUP DIAGNOSTICS ---")
+print(f"DEBUG: Python Executable: {sys.executable}")
+print(f"DEBUG: PYTHONPATH: {os.getenv('PYTHONPATH')}")
+print(f"DEBUG: CWD: {os.getcwd()}")
+print(f"DEBUG: Directory Contents: {os.listdir('.')}")
 if os.path.exists('app'):
-    print(f"DEBUG: Files in app/: {os.listdir('app')}")
+    print(f"DEBUG: 'app' folder exists. Contents: {os.listdir('app')}")
+else:
+    print("DEBUG: 'app' folder NOT FOUND in current directory!")
+print("--- END STARTUP DIAGNOSTICS ---")
 
 try:
+    from fastapi import FastAPI
+    from fastapi.middleware.cors import CORSMiddleware
     from app.database import Base, SessionLocal, engine
     from app.routers import auth, catalog, library, playback, playlists, users
     from app.seed import seed_catalog
 except Exception as e:
-    print(f"FATAL IMPORT ERROR: {e}")
+    print(f"CRITICAL ERROR DURING IMPORT: {e}")
     import traceback
     traceback.print_exc()
     sys.exit(3)
-
-print(f"DEBUG: Starting app with DATABASE_URL present: {bool(os.getenv('DATABASE_URL'))}")
 
 app = FastAPI(title="Spotify Clone API", version="1.0.0")
 
