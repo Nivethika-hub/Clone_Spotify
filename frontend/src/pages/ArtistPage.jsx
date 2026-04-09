@@ -10,22 +10,15 @@ import { handleImageFallback, withFallbackArt } from '../lib/media';
 
 const ArtistPage = () => {
   const { artistId } = useParams();
-  const { api } = useAuth();
+  const { api, library, toggleLike, toggleArtistSave } = useAuth();
   const { currentTrack, isPlaying, playCollection, playTrack } = usePlayer();
   const [artist, setArtist] = useState(null);
-  const [saved, setSaved] = useState(false);
-  const [likedTrackIds, setLikedTrackIds] = useState([]);
 
   useEffect(() => {
     const loadArtist = async () => {
       try {
-        const [artistResponse, libraryResponse] = await Promise.all([
-          api.get(`/artists/${artistId}`),
-          api.get('/library'),
-        ]);
-        setArtist(artistResponse.data);
-        setSaved(libraryResponse.data.saved_artists.some((item) => item.id === Number(artistId)));
-        setLikedTrackIds(libraryResponse.data.liked_tracks.map((track) => track.id));
+        const response = await api.get(`/artists/${artistId}`);
+        setArtist(response.data);
       } catch (error) {
         console.error('Failed to load artist:', error);
       }
@@ -38,34 +31,7 @@ const ArtistPage = () => {
     return <div className="page page-loading">Loading artist...</div>;
   }
 
-  const toggleSaveArtist = async () => {
-    try {
-      if (saved) {
-        await api.delete(`/library/artists/${artist.id}/save`);
-        setSaved(false);
-      } else {
-        await api.post(`/library/artists/${artist.id}/save`);
-        setSaved(true);
-      }
-    } catch (error) {
-      console.error('Failed to update saved artist:', error);
-    }
-  };
-
-  const toggleLike = async (track) => {
-    const isLiked = likedTrackIds.includes(track.id);
-    try {
-      if (isLiked) {
-        await api.delete(`/library/tracks/${track.id}/like`);
-        setLikedTrackIds((current) => current.filter((trackId) => trackId !== track.id));
-      } else {
-        await api.post(`/library/tracks/${track.id}/like`);
-        setLikedTrackIds((current) => [...current, track.id]);
-      }
-    } catch (error) {
-      console.error('Failed to update liked songs:', error);
-    }
-  };
+  const isSaved = Boolean(library?.saved_artists?.some((item) => item.id === artist.id));
 
   return (
     <div className="page">
@@ -79,9 +45,13 @@ const ArtistPage = () => {
             <button className="primary-button" onClick={() => playCollection(artist.top_tracks)}>
               Play artist
             </button>
-            <button className="secondary-button" onClick={toggleSaveArtist}>
-              <UserPlus size={16} />
-              {saved ? 'Saved artist' : 'Save artist'}
+            <button 
+              className={`secondary-button ${isSaved ? 'active' : ''}`} 
+              onClick={() => toggleArtistSave(artist)}
+              style={{ color: isSaved ? 'var(--accent)' : 'inherit' }}
+            >
+              <Heart size={16} fill={isSaved ? 'currentColor' : 'none'} />
+              {isSaved ? 'Saved artist' : 'Save artist'}
             </button>
           </div>
         </div>
@@ -102,7 +72,7 @@ const ArtistPage = () => {
               index={index}
               isActive={currentTrack?.id === track.id}
               isPlaying={isPlaying}
-              isLiked={likedTrackIds.includes(track.id)}
+              isLiked={Boolean(library?.liked_tracks?.some((item) => item.id === track.id))}
               onToggleLike={toggleLike}
               onPlay={(selectedTrack) => playTrack(selectedTrack, artist.top_tracks)}
             />

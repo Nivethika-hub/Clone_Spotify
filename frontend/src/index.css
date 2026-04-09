@@ -680,6 +680,11 @@ textarea {
   color: var(--accent);
 }
 
+.quick-like-button.active svg,
+.icon-button.active svg {
+  fill: currentColor !important;
+}
+
 .feature-shortcuts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
