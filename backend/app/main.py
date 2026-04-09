@@ -1,11 +1,24 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from app.database import Base, SessionLocal, engine
-from app.routers import auth, catalog, library, playback, playlists, users
-from app.seed import seed_catalog
 import os
 import sys
+
+# DIAGNOSTIC PRINTS
+print(f"DEBUG: Current Working Directory: {os.getcwd()}")
+print(f"DEBUG: Python Path: {sys.path}")
+print(f"DEBUG: Files in CWD: {os.listdir('.')}")
+if os.path.exists('app'):
+    print(f"DEBUG: Files in app/: {os.listdir('app')}")
+
+try:
+    from app.database import Base, SessionLocal, engine
+    from app.routers import auth, catalog, library, playback, playlists, users
+    from app.seed import seed_catalog
+except Exception as e:
+    print(f"FATAL IMPORT ERROR: {e}")
+    import traceback
+    traceback.print_exc()
+    sys.exit(3)
 
 print(f"DEBUG: Starting app with DATABASE_URL present: {bool(os.getenv('DATABASE_URL'))}")
 
