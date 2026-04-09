@@ -7,12 +7,16 @@ import { usePlayer } from '../context/PlayerContext';
 import { handleImageFallback, withFallbackArt } from '../lib/media';
 
 const LibraryPage = () => {
-  const { api, library, toggleLike, toggleAlbumSave, toggleArtistSave } = useAuth();
+  const { api, library, loading: authLoading, toggleLike, toggleAlbumSave, toggleArtistSave, refreshLibrary } = useAuth();
   const { currentTrack, isPlaying, playTrack } = usePlayer();
-  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    if (!library) {
+      refreshLibrary();
+    }
+  }, [library, refreshLibrary]);
 
-
-  if (loading) {
+  if (authLoading || (!library && !authLoading)) {
     return <div className="page page-loading">Loading library...</div>;
   }
 

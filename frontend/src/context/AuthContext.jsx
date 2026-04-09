@@ -106,6 +106,10 @@ export const AuthProvider = ({ children }) => {
 
     apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
 
+    if (token && !library && !authInFlight) {
+      refreshLibrary();
+    }
+
     if (!user && !authInFlight) {
       refreshUser();
       refreshLibrary();
@@ -114,7 +118,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     return () => apiClient.interceptors.response.eject(interceptor);
-  }, [token, user, authInFlight]);
+  }, [token, user, authInFlight, library]);
 
   const authenticate = async (endpoint, payload) => {
     setAuthInFlight(true);
