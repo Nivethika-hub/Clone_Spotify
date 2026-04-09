@@ -8,6 +8,12 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 120
     jwt_algorithm: str = "HS256"
 
+    @property
+    def postgres_url(self) -> str:
+        if self.database_url.startswith("postgres://"):
+            return self.database_url.replace("postgres://", "postgresql://", 1)
+        return self.database_url
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
