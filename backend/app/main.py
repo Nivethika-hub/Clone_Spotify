@@ -32,20 +32,22 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup():
     try:
-        # Only create tables and seed if we have a database URL
-        if os.getenv('DATABASE_URL'):
-            print("DEBUG: Database URL found. Initializing database...")
+        # Use the settings object which handles environment variable mapping automatically
+        db_url = os.getenv('DATABASE_URL') or os.getenv('POSTGRES_URL')
+        
+        if db_url:
+            print(f"DEBUG: Database URL detected. Initializing database...")
             Base.metadata.create_all(bind=engine)
-            print("DEBUG: Seeding catalog...")
+            print("DEBUG: Seeding catalog with dummy songs...")
             with SessionLocal() as db:
                 seed_catalog(db)
             print("DEBUG: Database initialization complete.")
         else:
-            print("WARNING: No DATABASE_URL found. Skipping DB initialization.")
-            # If using SQLite on Render, we still create tables
-            if "sqlite" in str(engine.url):
-                Base.metadata.create_all(bind=engine)
-                print("DEBUG: SQLite tables created.")
+            print("WARNING: No production DATABASE_URL found. Using default/SQLite.")
+            Base.metadata.create_all(bind=engine)
+            with SessionLocal() as db:
+                seed_catalog(db)
+            print("DEBUG: Local/SQLite initialization complete.")
                 
         print("--- STARTUP SUCCESSFUL ---")
     except Exception as e:
