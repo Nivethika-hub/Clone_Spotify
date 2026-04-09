@@ -4,6 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, SessionLocal, engine
 from app.routers import auth, catalog, library, playback, playlists, users
 from app.seed import seed_catalog
+import os
+import sys
+
+print(f"DEBUG: Starting app with DATABASE_URL present: {bool(os.getenv('DATABASE_URL'))}")
 
 app = FastAPI(title="Spotify Clone API", version="1.0.0")
 
@@ -18,9 +22,19 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup():
-    Base.metadata.create_all(bind=engine)
-    with SessionLocal() as db:
-        seed_catalog(db)
+    try:
+        print("DEBUG: Creating tables...")
+        Base.metadata.create_all(bind=engine)
+        print("DEBUG: Seeding catalog...")
+        with SessionLocal() as db:
+            seed_catalog(db)
+        print("DEBUG: Startup complete!")
+    except Exception as e:
+        print(f"FATAL STARTUP ERROR: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        # On Render, we might want to exit so it doesn't just hang
+        sys.exit(1)
 
 
 @app.get("/health")
